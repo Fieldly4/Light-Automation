@@ -18,8 +18,8 @@ Physical Computing Project 2025 - IT KMITL
 
 | รหัสนักศึกษา | ชื่อ-นามสกุล |
 | :----------: | :-----------: |
-| 67070040 | **นายฐนกร โพธิ์ปาน** ![ฐนกร อวาตาร์](assets/thanakorn_avatar.jpg) |
-| 67070006 | **นายกษิดิ์เดช แสงสว่าง** ![กษิดิ์เดช อวาตาร์](assets/kasidet_avatar.png) |
+| 67070040 | **นายฐนกร โพธิ์ปาน** <img src="assets/thanakorn_avatar.jpg" width="40" height="40"> |
+| 67070006 | **นายกษิดิ์เดช แสงสว่าง** <img src="assets/.png" width="40" height="40"> |
 
 ---
 
