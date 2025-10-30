@@ -17,7 +17,7 @@ Physical Computing Project 2025 - IT KMITL
 ## 👥 ผู้พัฒนา (Contributors)
 
 * **รหัสนักศึกษา:** 67070040
-    * **นายฐนกร โพธิ์ปาน**  <img src="assets/thanakorn_avatar.png" width="60" height="60" alt="ฐนกร โพธิ์ปาน">
+    * **นายฐนกร โพธิ์ปาน**  <img src="assets/thanakorn_avatar.jpg" width="60" height="60" alt="ฐนกร โพธิ์ปาน">
     
 * **รหัสนักศึกษา:** 67070006
     * **นายกษิดิ์เดช แสงสว่าง**  <img src="assets/kasidet_avatar.png" width="60" height="60" alt="กษิดิ์เดช แสงสว่าง">
