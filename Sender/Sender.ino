@@ -5,9 +5,6 @@
 #include <WebServer.h>
 #include "esp_wifi.h"
 
-// **********************************
-// *** ⚠️ ตั้งค่าของคุณที่นี่ ⚠️ ***
-// **********************************
 const char* ssid = ".4G";
 const char* password = "";
 
@@ -29,14 +26,12 @@ typedef struct struct_message {
 
 struct_message myData;
 
-// ⬇️ แก้ไข ⬇️: เพิ่มตัวแปรติดตามสถานะโหมด Auto
+// สถานะโหมด Auto
 int serverLedState = 0;         // สถานะไฟ (0=OFF, 1=ON)
 bool serverAutoModeState = false; // สถานะโหมด Auto (เริ่มต้น = ปิด)
-// ⬆️ -------------------------------- ⬆️
 
-// *****************************************************************
-// ** ⬇️ ส่วนหน้าเว็บ HTML/CSS/JS ทั้งหมดใน PROGMEM ⬇️ **
-// *****************************************************************
+
+//HTML
 const char MAIN_page[] PROGMEM = R"=====(
 <!DOCTYPE html>
 <html lang="th">
@@ -173,10 +168,8 @@ const char MAIN_page[] PROGMEM = R"=====(
     </div>
 
     <script>
-        // ⬇️ แก้ไข ⬇️: เพิ่มตัวแปรสถานะโหมด Auto และรับค่าจาก Server
         let isLightOn = %STATE%; 
-        let isAutoOn = %AUTO_STATE%; // ⬅️ รับค่าสถานะ Auto ตอนโหลดหน้า
-        // ⬆️ -------------------------------- ⬆️
+        let isAutoOn = %AUTO_STATE%;
 
         let onTimeSeconds = 0;
         let offTimeSeconds = 0;
@@ -197,10 +190,7 @@ const char MAIN_page[] PROGMEM = R"=====(
         const autoTimerUnitInput = document.getElementById('autoTimerUnit');
         const autoTimerActionInput = document.getElementById('autoTimerAction');
         const timerActionDisplay = document.getElementById('timerActionDisplay');
-        
-        // ⬇️ เพิ่มใหม่ ⬇️: ดึงที่แสดงสถานะโหมด Auto
         const autoStatusDisplay = document.getElementById('autoStatusDisplay');
-        // ⬆️ -------------------------------- ⬆️
 
 
         // ฟังก์ชันแปลงวินาทีเป็นรูปแบบ HH:MM:SS
@@ -223,8 +213,7 @@ const char MAIN_page[] PROGMEM = R"=====(
             offTimeDisplay.textContent = formatTime(offTimeSeconds);
         }
 
-        // ⬇️ เพิ่มใหม่ ⬇️: ฟังก์ชันอัปเดต UI (แยกออกมา)
-        // (จะอัปเดตทั้งสถานะไฟ และสถานะโหมด Auto)
+        // อัปเดตทั้งสถานะไฟ และสถานะโหมด Auto
         function updateUI() {
             // 1. อัปเดตสถานะไฟ (Light Status)
             if (isLightOn) {
@@ -246,9 +235,7 @@ const char MAIN_page[] PROGMEM = R"=====(
                 autoStatusDisplay.style.color = '#dc3545'; // Red
             }
         }
-        // ⬆️ -------------------------------- ⬆️
 
-        // ⬇️ เพิ่มใหม่ ⬇️: ฟังก์ชัน Polling ถามสถานะจาก Server
         function fetchStatus() {
             fetch('/status')
                 .then(response => {
@@ -263,10 +250,9 @@ const char MAIN_page[] PROGMEM = R"=====(
                 })
                 .catch(error => console.error('Error fetching status:', error));
         }
-        // ⬆️ -------------------------------- ⬆️
 
 
-        // (ฟังก์ชัน Auto Timer ทั้งหมดยังเหมือนเดิม)
+        // Auto Timer
         function cancelAutoTimer() {
             if (autoTimerIntervalId) {
                 clearInterval(autoTimerIntervalId);
@@ -329,7 +315,7 @@ const char MAIN_page[] PROGMEM = R"=====(
         }
 
 
-        // ⬇️ แก้ไข ⬇️: ฟังก์ชันส่งคำสั่งพิเศษ (Auto)
+        // ฟังก์ชันส่งคำสั่งพิเศษ (Auto)
         function sendFunctionCommand(cmdCode) {
             console.log('Sending special command: ' + cmdCode);
 
@@ -358,10 +344,9 @@ const char MAIN_page[] PROGMEM = R"=====(
                     fetchStatus(); // ⬇️ ถ้าล้มเหลว ให้ดึงสถานะจริงกลับมา ⬇️
                 });
         }
-        // ⬆️ -------------------------------- ⬆️
 
 
-        // ⬇️ แก้ไข ⬇️: ฟังก์ชันหลัก (On/Off) ให้ปิดโหมด Auto ด้วย
+        // (On/Off) ให้ปิดโหมด Auto ด้วย
         function setLightStatus(turnOn, isManualAction = true) {
             // (ป้องกันการกดซ้ำ)
             if (isLightOn === turnOn && isManualAction) {
@@ -393,7 +378,6 @@ const char MAIN_page[] PROGMEM = R"=====(
                     throw error; 
                 });
         }
-        // ⬆️ -------------------------------- ⬆️
 
         // ฟังก์ชันรีเซ็ตตัวนับเวลา
         function resetTimers() {
@@ -406,11 +390,11 @@ const char MAIN_page[] PROGMEM = R"=====(
             alert('รีเซ็ตตัวนับเวลาแล้ว!');
         }
         
-        // ⬇️ แก้ไข ⬇️: เริ่มการทำงาน
+        // เริ่มการทำงาน
         // 1. เริ่มตัวจับเวลา (นับเวลา On/Off)
         timerInterval = setInterval(updateTimers, 1000);
 
-        // 2. ⬇️ เพิ่มใหม่ ⬇️: เริ่มตัว Polling (ถามสถานะ /status)
+        // 2. เริ่มตัว Polling (ถามสถานะ /status)
         setInterval(fetchStatus, 3000); // ถามสถานะทุก 3 วินาที
 
         // 3. ตั้งค่า UI เริ่มต้น (ตามสถานะที่ Server ส่งมาตอนโหลด)
@@ -422,9 +406,6 @@ const char MAIN_page[] PROGMEM = R"=====(
 </body>
 </html>
 )=====";
-// *****************************************************************
-// ** ⬆️ สิ้นสุดส่วนหน้าเว็บ PROGMEM ⬆️ **
-// *****************************************************************
 
 
 // ฟังก์ชันที่จะถูกเรียกเมื่อส่งข้อมูลสำเร็จ/ล้มเหลว
@@ -451,7 +432,7 @@ void handleRoot() {
     server.send(200, "text/html", html);
 }
 
-// ⬇️ เพิ่มใหม่ ⬇️: ฟังก์ชันสำหรับส่งสถานะให้ JavaScript (Polling)
+// ฟังก์ชันสำหรับส่งสถานะให้ JavaScript (Polling)
 void handleStatus() {
     // สร้าง JSON response
     // เช่น {"light":true, "auto":false}
@@ -467,7 +448,7 @@ void handleStatus() {
 // ⬆️ -------------------------------- ⬆️
 
 
-// ⬇️ แก้ไข ⬇️: ฟังก์ชันสำหรับรับคำสั่ง (On/Off/Auto) จาก fetch()
+// ฟังก์ชันสำหรับรับคำสั่ง (On/Off/Auto) จาก fetch()
 void handleSet() {
     if (!server.hasArg("cmd")) {
         server.send(400, "text/plain", "Bad Request: Missing cmd");
@@ -476,7 +457,7 @@ void handleSet() {
 
     int requestedCommand = server.arg("cmd").toInt();
     
-    // ⬇️ แก้ไข ⬇️: อัปเดตตัวแปรสถานะบน Server ตามคำสั่ง
+    // อัปเดตตัวแปรสถานะบน Server ตามคำสั่ง
     if (requestedCommand == CMD_ON) {
         serverLedState = 1;
         serverAutoModeState = false; // ⬅️ บังคับปิดโหมด Auto
@@ -537,7 +518,7 @@ void setup() {
     serverLedState = 0;      // ⬅️ ตั้งค่าเริ่มต้น
     serverAutoModeState = false; // ⬅️ ตั้งค่าเริ่มต้น
 
-    // ⬇️ แก้ไข ⬇️: เพิ่ม Endpoint สำหรับ /set และ /status
+    // เพิ่ม Endpoint สำหรับ /set และ /status
     server.on("/", HTTP_GET, handleRoot);     // ส่งหน้าเว็บหลัก
     server.on("/set", HTTP_GET, handleSet);   // รับคำสั่ง (On/Off/Auto)
     server.on("/status", HTTP_GET, handleStatus); // ⬅️ เพิ่มใหม่: ส่งสถานะให้ JS
