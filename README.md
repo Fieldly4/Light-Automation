@@ -27,13 +27,13 @@ Physical Computing Project 2025 - IT KMITL
 
 [**Source Code**](Code)
 
-[Sender (ตัว Host สำหรับสร้างเว็ป และส่งมอบคำสั่ง)](Code/Sender)
+[Sender (ตัว Host สำหรับสร้างเว็ป และส่งมอบคำสั่ง)](Sender)
 
-[Reciver (ตัว Slave สำหรับสั่งการต่างๆ)](Code/Reciver)
+[Reciver (ตัว Slave สำหรับสั่งการต่างๆ)](Reciver)
 
-[MacAddress (Code สำหรับหาค่า MacAddress สำหรับใช้สื่อสารกัน)](Code/MacAddress)
+[MacAddress (Code สำหรับหาค่า MacAddress สำหรับใช้สื่อสารกัน)](MacAddress)
 
-[WebPrototype (Code สำหรับตัวอย่างหน้าเว็ปก่อนนำไปใส่ใน ESP32)](Code/WebPrototype)
+[WebPrototype (Code สำหรับตัวอย่างหน้าเว็ปก่อนนำไปใส่ใน ESP32)](WebPrototype)
 
 [Video Presentation (Youtube)](https://youtu.be/H1Q7FF8rNq0)
 
