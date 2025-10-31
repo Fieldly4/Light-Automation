@@ -35,6 +35,8 @@ Physical Computing Project 2025 - IT KMITL
 
 [WebPrototype (Code สำหรับตัวอย่างหน้าเว็ปก่อนนำไปใส่ใน ESP32)](Code/WebPrototype)
 
+[Video Presentation (Youtube)](https://youtu.be/H1Q7FF8rNq0)
+
 ---
 
 ## 🛠 แหล่งที่มา (Source)
