@@ -30,3 +30,5 @@ Physical Computing Project 2025 - IT KMITL
 การวัดค่าความสว่าง ด้วย Arduino : https://shorturl.at/P0mTf
 
 ESP32-Arduino_IDE : https://shorturl.at/arHY0
+
+ESP32-Survo : https://shorturl.at/Yutlt
