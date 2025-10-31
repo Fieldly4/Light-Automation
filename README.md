@@ -25,9 +25,9 @@ Physical Computing Project 2025 - IT KMITL
 
 ## 📁 รายละเอียดต่างๆ (Files)
 
-[**Source Code**](Code)
+[**Source Code**](https://github.com/Fieldly4/Light-Automation/tree/main/Code)
 
-[Sender (ตัว Host สำหรับสร้างเว็ป และส่งมอบคำสั่ง)](https://github.com/Fieldly4/Light-Automation/tree/main/Code)
+[Sender (ตัว Host สำหรับสร้างเว็ป และส่งมอบคำสั่ง)](https://github.com/Fieldly4/Light-Automation/tree/main/Code/Sender)
 
 [Reciver (ตัว Slave สำหรับสั่งการต่างๆ)](https://github.com/Fieldly4/Light-Automation/tree/main/Code/Reciver)
 
