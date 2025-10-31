@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💡 ระบบควบคุมไฟ (ESP32)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; text-align: center; padding: 20px;
+            background-color: #333; color: #f0f0f0;
+            transition: background-color 1.5s ease-in-out, color 1.5s ease-in-out; 
+        }
+        body.light-on { background-color: #f4f4f9; color: #333; }
+        .container {
+            max-width: 500px; margin: 0 auto; background-color: rgba(255, 255, 255, 0.1); 
+            padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 1.5s ease-in-out, box-shadow 1.5s ease-in-out;
+        }
+        body.light-on .container { background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        h1 { color: inherit; }
+        .status {
+            font-size: 2em; margin: 20px 0; padding: 10px; border-radius: 5px;
+            font-weight: bold; color: inherit; background-color: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: background-color 1.5s ease-in-out, border 1.5s ease-in-out, color 1.5s ease-in-out;
+        }
+        .status.off {
+            color: #dc3545; background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        body.light-on .status.on {
+            color: #28a745; background-color: #d4edda; border: 1px solid #c3e6cb;
+        }
+        .timer-info {
+            margin-top: 20px; padding: 15px; background-color: rgba(255, 255, 255, 0.1); 
+            border-radius: 5px; text-align: left;
+            transition: background-color 1.5s ease-in-out;
+        }
+        body.light-on .timer-info { background-color: #e9ecef; }
+        .timer-info p, .timer-info span, .timer-info h2, .timer-info h4, .timer-info label {
+            color: #ffc107 !important; font-weight: bold;
+            transition: color 1.5s ease-in-out;
+        }
+        body.light-on .timer-info p, body.light-on .timer-info span, body.light-on .timer-info h2, body.light-on .timer-info h4, body.light-on .timer-info label {
+            color: #333 !important; 
+        }
+        button {
+            padding: 10px 20px; margin: 10px; font-size: 1em; cursor: pointer;
+            border: none; border-radius: 5px; transition: background-color 0.3s;
+            color: white; font-weight: bold;
+        }
+        #onButton { background-color: #28a745; }
+        #onButton:hover { background-color: #218838; }
+        #offButton { background-color: #dc3545; }
+        #offButton:hover { background-color: #c82333; }
+        #resetButton { background-color: rgb(81, 81, 232); }
+        #resetButton:hover { background-color: blue; }
+        input[type="number"] {
+            width: 100px; padding: 5px; font-size: 0.9em;
+            border-radius: 5px; border: 1px solid #ccc;
+        }
+        select {
+             padding: 5px; font-size: 0.9em;
+             border-radius: 5px; border: 1px solid #ccc;
+        }
+        #startAutoTimerButton {
+            background-color: #007bff; color: white;
+            padding: 6px 10px; font-size: 0.9em; margin-left: 10px;
+        }
+        #startAutoTimerButton:hover { background-color: #0056b3; }
+        #cancelAutoTimerButton {
+            background-color: #6c757d; color: white; padding: 6px 10px; font-size: 0.9em;
+            margin-left: 5px; 
+        }
+        #cancelAutoTimerButton:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Light Switch Controller 💡</h1>
+
+        <div id="lightStatus" class="status off">
+            Light <strong>Off</strong>
+        </div>
+        
+        <div>
+            <button id="onButton" onclick="setLightStatus(true)">On</button>
+            <button id="offButton" onclick="setLightStatus(false)">Off</button>
+        </div>
+
+        <div style="margin-top: 15px; border-top: 1px solid rgba(128,128,128,0.3); padding-top: 10px;">
+            <h4>ฟังก์ชันพิเศษ</h4>
+            <p style="margin-bottom: 5px;">สถานะโหมดแสงสว่าง: 
+                <strong id="autoStatusDisplay" style="color: #dc3545;">ปิด</strong>
+            </p>
+            <button id="autoButton" onclick="sendFunctionCommand(102)" style="background-color: #ffc107; color: #333; padding: 10px 20px; margin: 5px;">
+                สลับโหมดแสงสว่าง
+            </button>
+        </div>
+        <div class="timer-info">
+            <h2>⏱️ Timer </h2>
+            <p>Light <strong>On</strong>: <span id="onTimeDisplay">00:00:00</span></p>
+            <p>Light <strong>Off</strong>: <span id="offTimeDisplay">00:00:00</span></p>
+            <button id="resetButton" onclick="resetTimers()">reset</button>
+            <div style="margin-top: 20px; border-top: 1px solid rgba(128,128,128,0.3); padding-top: 15px;">
+                <h4>Auto Timer (ตั้งเวลาอัตโนมัติ)</h4>
+                <div style="margin-bottom: 10px;">
+                    <label for="autoTimerValue">ตั้งเวลา: </label>
+                    <input type="number" id="autoTimerValue" placeholder="ป้อนเวลา" min="1">
+                    <select id="autoTimerUnit" style="margin-left: 5px;">
+                        <option value="seconds">วินาที</option>
+                        <option value="minutes" selected>นาที</option>
+                        <option value="hours">ชั่วโมง</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 10px;">
+                     <label for="autoTimerAction">เมื่อครบกำหนด: </label>
+                    <select id="autoTimerAction">
+                        <option value="off">สั่งปิด (Off)</option>
+                        <option value="on">สั่งเปิด (On)</option>
+                    </select>
+                    <button id="startAutoTimerButton" onclick="startAutoTimer()">Start</button>
+                    <button id="cancelAutoTimerButton" onclick="cancelAutoTimer()">Cancel</button>
+                </div>
+                <p style="margin-top: 10px;">
+                    Time remaining (<span id="timerActionDisplay" style="font-weight: bold; color: inherit;">...</span>): 
+                    <span id="autoTimerDisplay" style="font-weight: bold; color: inherit;">Not set</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLightOn = true; 
+        let isAutoOn = true; 
+
+        let onTimeSeconds = 0;
+        let offTimeSeconds = 0;
+        let timerInterval;
+
+        let autoTimerIntervalId = null;
+        let autoTimerRemainingSeconds = 0;
+        let autoTimerActionTarget = null; 
+
+        const statusDisplay = document.getElementById('lightStatus');
+        const onTimeDisplay = document.getElementById('onTimeDisplay');
+        const offTimeDisplay = document.getElementById('offTimeDisplay');
+        const body = document.body;
+        
+        const autoTimerDisplay = document.getElementById('autoTimerDisplay');
+        const autoTimerValueInput = document.getElementById('autoTimerValue');
+        const autoTimerUnitInput = document.getElementById('autoTimerUnit');
+        const autoTimerActionInput = document.getElementById('autoTimerAction');
+        const timerActionDisplay = document.getElementById('timerActionDisplay');
+    
+        const autoStatusDisplay = document.getElementById('autoStatusDisplay');
+
+
+        function formatTime(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            const format = (val) => String(val).padStart(2, '0');
+            return `${format(hours)}:${format(minutes)}:${format(seconds)}`;
+        }
+
+        function updateTimers() {
+            if (isLightOn) {
+                onTimeSeconds++;
+            } else {
+                offTimeSeconds++;
+            }
+            onTimeDisplay.textContent = formatTime(onTimeSeconds);
+            offTimeDisplay.textContent = formatTime(offTimeSeconds);
+        }
+
+        function updateUI() {
+            if (isLightOn) {
+                body.classList.add('light-on');
+                statusDisplay.innerHTML = 'Light <strong>On</strong>';
+                statusDisplay.className = 'status on';
+            } else {
+                body.classList.remove('light-on');
+                statusDisplay.innerHTML = 'Light <strong>Off</strong>';
+                statusDisplay.className = 'status off';
+            }
+            
+            if (isAutoOn) {
+                autoStatusDisplay.textContent = 'เปิด';
+                autoStatusDisplay.style.color = '#28a745'; 
+            } else {
+                autoStatusDisplay.textContent = 'ปิด';
+                autoStatusDisplay.style.color = '#dc3545'; 
+            }
+        }
+
+        function fetchStatus() {
+            fetch('/status')
+                .then(response => {
+                    if (!response.ok) { 
+                        return { light: isLightOn, auto: isAutoOn }; 
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    isLightOn = data.light;
+                    isAutoOn = data.auto;
+                    updateUI();
+                })
+                .catch(error => {
+                    updateUI();
+                });
+        }
+
+
+        function cancelAutoTimer() {
+            if (autoTimerIntervalId) {
+                clearInterval(autoTimerIntervalId);
+                autoTimerIntervalId = null;
+            }
+            autoTimerRemainingSeconds = 0;
+            autoTimerActionTarget = null;
+            autoTimerDisplay.textContent = 'Not set';
+            timerActionDisplay.textContent = '...';
+            autoTimerValueInput.value = '';
+        }
+        function updateAutoTimer() {
+            if (autoTimerRemainingSeconds > 0) {
+                autoTimerRemainingSeconds--;
+                autoTimerDisplay.textContent = formatTime(autoTimerRemainingSeconds);
+            } else {
+                const actionText = autoTimerActionTarget === true ? 'เปิด' : 'ปิด';
+                setLightStatus(autoTimerActionTarget, false) 
+                    .then(() => {
+                        alert('ถึงเวลาสั่ง' + actionText + 'ไฟอัตโนมัติแล้ว!'); 
+                    })
+                    .catch((error) => {
+                        alert('ตั้งเวลาอัตโนมัติล้มเหลว: ไม่สามารถส่งคำสั่งได้!');
+                    })
+                    .finally(() => {
+                        cancelAutoTimer();
+                    });
+            }
+        }
+        function startAutoTimer() {
+            const value = parseInt(autoTimerValueInput.value);
+            const unit = autoTimerUnitInput.value;
+            const action = autoTimerActionInput.value; 
+
+            if (isNaN(value) || value <= 0) {
+                alert('กรุณาใส่เวลาที่ถูกต้อง (มากกว่า 0)');
+                return;
+            }
+
+            let totalSeconds = 0;
+            if (unit === 'seconds') {
+                totalSeconds = value;
+            } else if (unit === 'hours') {
+                totalSeconds = value * 3600;
+            } else {
+                totalSeconds = value * 60;
+            }
+            
+            autoTimerActionTarget = (action === 'on');
+            if (autoTimerIntervalId) {
+                clearInterval(autoTimerIntervalId);
+            }
+            autoTimerRemainingSeconds = totalSeconds;
+            autoTimerDisplay.textContent = formatTime(autoTimerRemainingSeconds);
+            timerActionDisplay.textContent = autoTimerActionTarget ? 'สั่งเปิด' : 'สั่งปิด';
+            autoTimerIntervalId = setInterval(updateAutoTimer, 1000);
+            autoTimerValueInput.value = '';
+            alert('ตั้งเวลา ' + (autoTimerActionTarget ? 'เปิด' : 'ปิด') + ' ในอีก ' + formatTime(totalSeconds) + ' สำเร็จ');
+        }
+
+
+        function sendFunctionCommand(cmdCode) {
+            
+            if (cmdCode === 102) {
+                isAutoOn = !isAutoOn; 
+                updateUI();
+            }
+
+            return fetch('/set?cmd=' + cmdCode)
+                .then(response => {
+                    if (!response.ok) {
+                        return;
+                    }
+                })
+                .catch(error => {
+                });
+        }
+
+
+        function setLightStatus(turnOn, isManualAction = true) {
+            
+            if (isManualAction) {
+                cancelAutoTimer();
+            }
+            
+            isLightOn = turnOn;
+            isAutoOn = false; 
+            updateUI(); 
+
+            let cmd = isLightOn ? 100 : 101;
+            return fetch('/set?cmd=' + cmd) 
+                .then(response => {
+                    if (!response.ok) {
+                        fetchStatus(); 
+                        return;
+                    }
+                })
+                .catch(error => {
+                    fetchStatus(); 
+                });
+        }
+
+        function resetTimers() {
+            onTimeSeconds = 0;
+            offTimeSeconds = 0;
+            onTimeDisplay.textContent = formatTime(onTimeSeconds);
+            offTimeDisplay.textContent = formatTime(offTimeSeconds);
+            
+            cancelAutoTimer(); 
+            alert('รีเซ็ตตัวนับเวลาแล้ว!');
+        }
+        
+        timerInterval = setInterval(updateTimers, 1000);
+
+        setInterval(fetchStatus, 3000); 
+
+        updateUI(); 
+        
+    </script>
+
+</body>
+</html>
