@@ -16,10 +16,10 @@ Physical Computing Project 2025 - IT KMITL
 
 ## 👥 ผู้พัฒนา (Contributors)
 
-| รหัสนักศึกษา | ชื่อ-นามสกุล | รูป |
+| รหัสนักศึกษา | ชื่อ-นามสกุล | หน้าที่ | รูป |
 | :----------: | :----: | :----------: |
-| 67070006 | **นายกษิดิ์เดช แสงสว่าง** | <img src="assets/kasidet_avatar.png" width="100" height="100" alt="กษิดิ์เดช แสงสว่าง"> |
-| 67070040 | **นายฐนกร โพธิ์ปาน** | <img src="assets/thanakorn_avatar.jpg" width="100" height="100" alt="ฐนกร โพธิ์ปาน"> |
+| 67070006 | **นายกษิดิ์เดช แสงสว่าง** | Frontend | <img src="assets/kasidet_avatar.png" width="100" height="100" alt="กษิดิ์เดช แสงสว่าง"> |
+| 67070040 | **นายฐนกร โพธิ์ปาน** | Backend | <img src="assets/thanakorn_avatar.jpg" width="100" height="100" alt="ฐนกร โพธิ์ปาน"> |
 
 ---
 
