@@ -26,7 +26,7 @@ Physical Computing Project 2025 - IT KMITL
 ## 🖼️ แนะนำเกี่ยวกับ Project (Poster)
 
 <p align="center">
-  <img src="assets/poster.png" width="600" alt="Light Automation Project Poster">
+  <img src="assets/Light_poster.png" width="600" alt="Light Automation Project Poster">
 </p>
 
 ---
