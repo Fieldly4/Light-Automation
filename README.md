@@ -23,6 +23,14 @@ Physical Computing Project 2025 - IT KMITL
 
 ---
 
+## 🖼️ แนะนำเกี่ยวกับ Project (Poster)
+
+<p align="center">
+  <img src="assets/poster.jpg" width="600" alt="Light Automation Project Poster">
+</p>
+
+---
+
 ## 📁 รายละเอียดต่างๆ (Files)
 
 [**Source Code**](https://github.com/Fieldly4/Light-Automation/tree/main/Code)
@@ -35,7 +43,7 @@ Physical Computing Project 2025 - IT KMITL
 
 [WebPrototype (Code สำหรับตัวอย่างหน้าเว็ปก่อนนำไปใส่ใน ESP32)](https://github.com/Fieldly4/Light-Automation/tree/main/Code/WebPrototype)
 
-[Poster (แนะนำเกี่ยวกับ Project)](https://github.com/Fieldly4/Light-Automation/tree/main/assets/poster)
+[Poster (แนะนำเกี่ยวกับ Project)](https://github.com/Fieldly4/Light-Automation/tree/main/assets/poster.png)
 
 [Website Presentation (Github.io)](https://fieldly4.github.io/Light-Automation/)
 
