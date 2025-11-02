@@ -43,7 +43,7 @@ Physical Computing Project 2025 - IT KMITL
 
 [WebPrototype (Code สำหรับตัวอย่างหน้าเว็ปก่อนนำไปใส่ใน ESP32)](https://github.com/Fieldly4/Light-Automation/tree/main/Code/WebPrototype)
 
-[Poster (แนะนำเกี่ยวกับ Project)](https://github.com/Fieldly4/Light-Automation/tree/main/assets/poster.png)
+[Poster (แนะนำเกี่ยวกับ Project)](https://github.com/Fieldly4/Light-Automation/tree/main/assets/Light_poster.png)
 
 [Website Presentation (Github.io)](https://fieldly4.github.io/Light-Automation/)
 
