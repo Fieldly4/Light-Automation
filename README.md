@@ -27,6 +27,18 @@ Physical Computing Project 2025 - IT KMITL
 
 [**Source Code**](https://github.com/Fieldly4/Light-Automation/tree/main/Code)
 
+[Sender (ตัว Host สำหรับสร้างเว็ป และส่งมอบคำสั่ง)](https://github.com/Fieldly4/Light-Automation/tree/main/Code/Sender)
+
+[Reciver (ตัว Slave สำหรับสั่งการต่างๆ)](https://github.com/Fieldly4/Light-Automation/tree/main/Code/Reciver)
+
+[MacAddress (Code สำหรับหาค่า MacAddress สำหรับใช้สื่อสารกัน)](https://github.com/Fieldly4/Light-Automation/tree/main/Code/MacAddress)
+
+[WebPrototype (Code สำหรับตัวอย่างหน้าเว็ปก่อนนำไปใส่ใน ESP32)](https://github.com/Fieldly4/Light-Automation/tree/main/Code/WebPrototype)
+
+[Poster](https://github.com/Fieldly4/Light-Automation/tree/main/assets/poster)
+
+[Website Presentation (Github.io)](https://fieldly4.github.io/Light-Automation/)
+
 [Video Presentation (Youtube)](https://youtu.be/H1Q7FF8rNq0)
 
 ---
