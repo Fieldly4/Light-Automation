@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light Automation</title>
+    
+    <style>
+        /* --- General Styles --- */
+        :root {
+            --bg-color: #1a1a1a;
+            --card-color: #2a2a2a;
+            --text-color: #f0f0f0;
+            --primary-color: #00bfa5; /* A nice teal color */
+            --border-color: #444;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin: 0;
+        }
+
+        header h1 span {
+            color: var(--primary-color);
+            font-size: 3rem;
+        }
+
+        /* --- Content Sections --- */
+        .content-section {
+            background-color: var(--card-color);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px var(--shadow-color);
+            
+            /* --- JS Animation --- */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        p, ul {
+            font-size: 1.1rem;
+            color: #ccc;
+        }
+
+        ul {
+            list-style-type: "✔️ ";
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* --- Hardware Grid --- */
+        .hardware-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .component-card {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .component-card img {
+            max-width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+            background-color: #fff;
+        }
+
+        .component-card h3 {
+            margin: 10px 0 0;
+            color: #fff;
+        }
+
+        /* --- Web UI Gallery --- */
+        .ui-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .ui-image {
+            flex: 1;
+            min-width: 300px;
+            max-width: 450px;
+            text-align: center;
+        }
+        
+        .ui-image h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .ui-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 3px solid var(--border-color);
+        }
+        
+        .ui-image .label-on { color: #4CAF50; }
+        .ui-image .label-off { color: #f44336; }
+
+        /* --- YouTube Video Section --- */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 3px solid var(--border-color);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* --- Final Installation --- */
+        .final-shot {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .final-shot img {
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 3px solid var(--border-color);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 2px solid var(--border-color);
+            color: #888;
+        }
+
+        footer p {
+            font-size: 1rem;
+            color: #888;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header>
+            <h1><span>💡</span><br>Project Light Automation</h1>
+            <p>สวิตช์ไฟอัตโนมัติ ลดการสัมผัส เพื่อชีวิตที่ง่ายขึ้น</p>
+        </header>
+
+        <main>
+            <section class="content-section">
+                <h2>🎯 วัตถุประสงค์ (Objective)</h2>
+                <p>
+                    โครงการนี้มีวัตถุประสงค์เพื่อสร้างอุปกรณ์สำหรับเปิด-ปิดสวิตช์ไฟอัตโนมัติ เพื่อช่วยลดการสัมผัสสวิตช์โดยตรง
+                    และเพิ่มความรวดเร็ว สะดวกสบายในการใช้งาน
+                </p>
+            </section>
+
+            <section class="content-section">
+                <h2>⚙️ หลักการทำงาน (How it Works)</h2>
+                <p>
+                    ระบบนี้ใช้ไมโครคอนโทรลเลอร์ ESP32 สองตัวทำงานประสานกันผ่าน Wi-Fi และ Bluetooth:
+                </p>
+                <ul>
+                    <li><strong>ESP32 (Host):</strong> ทำหน้าที่เป็นเซิร์ฟเวอร์หลัก สร้างหน้าเว็บไซต์ (Web Server) สำหรับให้ผู้ใช้เข้ามาควบคุมผ่านมือถือหรือคอมพิวเตอร์ (WiFi) (Bluetooth)</li>
+                    <li><strong>ESP32 (Slave):</strong> ทำหน้าที่เป็นไคลเอนต์ รับคำสั่งจาก Host จากนั้นจะสั่งการ <strong>Servo Motor</strong> ให้หมุนเพื่อกดสวิตช์ไฟจริง (Bluetooth)</li>
+                </ul>
+            </section>
+
+            <section class="content-section">
+                <h2>🛠️ อุปกรณ์ที่ใช้ (Hardware)</h2>
+                <div class="hardware-grid">
+                    <div class="component-card">
+                        <img src="ESP32.png" alt="ESP32 Board">
+                        <h3>ESP32</h3>
+                    </div>
+                    <div class="component-card">
+                        <img src="Survo.png" alt="Servo Motor">
+                        <h3>Servo Motor (SG90)</h3>
+                    </div>
+                    <div class="component-card">
+                        <img src="LightSensor.png" alt="LDR Light Sensor Module">
+                        <h3>Light Sensor Module</h3>
+                    </div>
+                    <div class="component-card">
+                        <img src="BreadBoard.png" alt="Breadboard">
+                        <h3>Breadboard</h3>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>🖥️ หน้าจอควบคุม (Web Interface)</h2>
+                <p>
+                    หน้าเว็บสำหรับควบคุม ถูกออกแบบมาให้ใช้งานง่าย (Minimal) 
+                    มีฟังก์ชันครบถ้วนทั้งการเปิด-ปิด, โหมดอัตโนมัติ (ใช้เซ็นเซอร์แสง) และการตั้งเวลา
+                </p>
+                <div class="ui-gallery">
+                    <div class="ui-image">
+                        <h4 class="label-on">สถานะ: เปิด (Light On)</h4>
+                        <img src="WebOn.png" alt="Web UI when light is on">
+                    </div>
+                    <div class="ui-image">
+                        <h4 class="label-off">สถานะ: ปิด (Light Off)</h4>
+                        <img src="WebOff.png" alt="Web UI when light is off">
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>🏠 ภาพการติดตั้งใช้งานจริง (Final Installation)</h2>
+                <p>
+                    ภาพการติดตั้ง ESP32 (Slave) และ Servo Motor เข้ากับสวิตช์ไฟจริงภายในห้อง
+                </p>
+                <div class="final-shot">
+                    <img src="Installation.jpg" alt="Final project installation">
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>▶️ วิดีโอสาธิตการทำงาน (Demonstration Video)</h2>
+                <p>รับชมการทำงานจริงของระบบ Light Automation ได้จากวิดีโอนี้:</p>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/H1Q7FF8rNq0" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>ดูรายละเอียดโค้ดและการทำงานทั้งหมดได้ที่ GitHub Repository:</p>
+            <a href="https://github.com/Fieldly4/Light-Automation" target="_blank">
+                Fieldly4 / Light-Automation
+            </a>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const sections = document.querySelectorAll('.content-section');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+</body>
+</html>
